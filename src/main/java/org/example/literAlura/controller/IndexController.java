@@ -42,7 +42,7 @@ public class IndexController {
         String prevUrl = libros.previous() != null ? "/cargar?page=" + (pagina - 1) : null;
 
         model.addAttribute("libros", libros.results());
-        model.addAttribute("totalPages", 10);
+        model.addAttribute("totalPages", 2);
         model.addAttribute("currentPage", pagina);
         model.addAttribute("nextUrl", nextUrl);
         model.addAttribute("prevUrl", prevUrl);
