@@ -1,0 +1,333 @@
+<!-- libros.html -->
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!-- stylesheet -->
+
+    <title>Alura_Challenge_Literatura</title>
+</head>
+
+<body>
+<!--Navbar-->
+<nav class="bg-gray-900 border-gray-200 d">
+    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+        <a href="/cargar?page=1" class="flex items-center space-x-3 rtl:space-x-reverse">
+            <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#ffffff"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="mr-2 h-6 w-6"
+            >
+                <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path>
+            </svg>
+            <span class="self-center text-2xl font-semibold whitespace-nowrap text-white">Biblioteca</span>
+        </a>
+        <button
+                data-collapse-toggle="navbar-default"
+                type="button"
+                class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-gray-200"
+                aria-controls="navbar-default"
+                aria-expanded="false"
+        >
+            <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15" />
+            </svg>
+        </button>
+        <div class="hidden w-full md:block md:w-auto" id="navbar-default">
+            <ul
+                    class="bg-gray-900 font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-gray-900"
+            >
+                <li>
+                    <a
+                            href="/myLibros"
+                            class="block py-2 px-3 text-white rounded hover:bg-blue-900 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0"
+                            aria-current="page"
+                    >Libros</a
+                    >
+                </li>
+                <li>
+                    <a
+                            href="/autores"
+                            class="block py-2 px-3 text-white rounded hover:bg-blue-900 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0"
+                    >Autores</a
+                    >
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!--FinNavbar-->
+<!-- Body -->
+<!-- Filter -->
+<div class="container mx-auto px-4 md:px-6 py-12">
+    <h2 class="mb-6 text-3xl font-bold tracking-tight">Buscar Libros</h2>
+    <form id="searchForm" class="mb-8 flex items-center gap-4">
+        <input
+                id="busquedaInput"
+                class="flex h-10 w-full rounded-md border-input text-sm ring-offset-background disabled:opacity-50 flex-1 rounded-l-md border-0 bg-white py-2 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300"
+                type="search"
+                placeholder="Titulo del Libro..."
+        />
+        <button
+                id="btnEnviar"
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md ring-offset-background transition-colors disabled:opacity-50 h-10 rounded-r-md bg-indigo-600 py-2 px-4 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500"
+                type="submit"
+        >
+            Buscar
+        </button>
+    </form>
+    <br />
+    <hr />
+    <div class="container mx-auto px-4 py-12 md:px-6">
+        <div class="grid md:grid-columns gap-8">
+            <div class="space-y-6">
+                <div>
+                    <h2 class="text-lg font-semibold">Filtros</h2>
+                    <div>
+                        <div class="border-b">
+                            <div class="hs-dropdown relative grid">
+                                <button
+                                        id="hs-dropdown-with-icons"
+                                        type="button"
+                                        class="hs-dropdown-toggle py-3 px-4 flex justify-between gap-x-32 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
+                                >
+                                    Actions
+                                    <svg
+                                            class="size-4"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="24"
+                                            height="24"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                    >
+                                        <path d="m6 9 6 6 6-6" />
+                                    </svg>
+                                </button>
+                                <div
+                                        class="hs-dropdown-menu opacity-0 hidden min-w-60 bg-white shadow-md rounded-lg p-2 mt-2 divide-y divide-gray-200"
+                                        aria-labelledby="hs-dropdown-with-icons"
+                                >
+                                    <div class="py-2">
+                                        <a
+                                                id="all-DB"
+                                                class="flex items-center rounded-lg px-3 py-2 text-sm text-gray-800 gap-x-3.5 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+                                                href="#"
+                                        >
+                                            <svg class="h-6 w-6 text-gray-800 dark:text-white" aria-hidden="true"
+                                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                                 viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-width="2"
+                                                      d="M9 8h10M9 12h10M9 16h10M4.99 8H5m-.02 4h.01m0 4H5"/>
+                                            </svg>
+
+                                            Todos los Libros de DB
+                                        </a>
+                                    </div>
+                                    <div class="py-2">
+                                        <a
+                                                id="most-downloads"
+                                                class="flex items-center rounded-lg px-3 py-2 text-sm text-gray-800 gap-x-3.5 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+                                                href="#"
+                                        >
+                                            <svg class="h-6 w-6 text-gray-800 dark:text-white" aria-hidden="true"
+                                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                                 viewBox="0 0 24 24">
+                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                      stroke-width="2"
+                                                      d="M4 15v2a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3v-2m-8 1V4m0 12-4-4m4 4 4-4"/>
+                                            </svg>
+
+                                            Top 10 Mas Descargados
+                                        </a>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="border-b">
+                        <div class="hs-dropdown relative grid">
+                            <button
+
+                                    type="button"
+                                    class="hs-dropdown-toggle2 py-3 px-4 flex justify-between gap-x-32 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
+                            >
+                                Idiomas
+                                <svg
+                                        class="size-4"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="24"
+                                        height="24"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                >
+                                    <path d="m6 9 6 6 6-6" />
+                                </svg>
+                            </button>
+                            <div
+                                    class="hs-dropdown-menu2 opacity-0 hidden min-w-60 bg-white shadow-md rounded-lg p-2 mt-2 divide-y divide-gray-200"
+                                    aria-labelledby="hs-dropdown-with-icons"
+                            >
+                                <div class="py-2">
+                                    <ul th:each="lenguaje:${lenguajes}">
+                                        <li>
+                                            <label><input  th:text="${lenguaje.name()}" type="radio" name="idioma" class="mr-2" /> </label>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-lg font-semibold">Ordenar por</h2>
+                    <button
+                            class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full"
+                            type="button"
+                            id="ordenar-boton"
+
+                    >
+                        <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="w-4 h-4 mr-2"
+                        >
+                            <path d="m21 16-4 4-4-4"></path>
+                            <path d="M17 20V4"></path>
+                            <path d="m3 8 4-4 4 4"></path>
+                            <path d="M7 4v16"></path>
+                        </svg>
+                        <span id="texto-boton">Ascendente</span>
+                    </button>
+                </div>
+            </div>
+            <div>
+                <div class="mb-8">
+                    <h2 class="text-2xl font-bold">Resultados de búsqueda</h2>
+                    <p th:text="'Mostrando ' + ${registrados} + ' resultados'" class="numResult mt-2 text-gray-600 dark:text-gray-400"></p>
+                </div>
+                <div class="contenedorResult grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+                    <div th:each="libro:${libros}" class="card shadow bg-white rounded-lg shadow-sm overflow-hidden">
+                        <div class="block card-image">
+                            <img th:if="${libro.getImagen()!=null}"
+                                 th:src="${libro.getImagen()}"
+                                 alt="Book cover"
+                                 width="300"
+                                 height="400"
+                                 class="w-full"
+                            />
+                            <img th:unless="${libro.getImagen()!= null}"
+                                 th:src="@{https://ctppxztfz8.execute-api.us-west-2.amazonaws.com/v1/photo-server/products/empty-img.jpg}"
+                                 alt="Default book cover" width="300" height="400" class="w-full"/>
+                        </div>
+                        <div class="p-4 card-description">
+                            <p class="font-semibold text-blue-900">Lenguajes: <span th:each="idio : ${libro.getIdiomas()}" th:text="${idio.getNomLenguaje()+', '}" class="mt-2 text-gray-600"></span></p>
+                            <p class="font-semibold text-blue-900">Descargas: <span  th:text="${libro.getNumeroDescargas()}" class="mt-2 text-gray-600"></span></p>
+                            <a th:href="${libro.getTexto()}" class="font-semibold text-blue-900 hover:underline">Leer</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/busquedaDB.js"></script>
+<script src="/filtrosDB.js"></script>
+<script src="/toggles.js"></script>
+
+</html>
+
+
+
+<style>
+
+    @media (min-width: 768px) {
+        .md\:grid-columns {
+            grid-template-columns: 240px 1fr;
+        }
+    }
+</style>
+
+
+<style>
+    .card {
+        height: 254px;
+        width: 190px;
+        position: relative;
+        transition: all 0.4s cubic-bezier(0.645, 0.045, 0.355, 1);
+        border-radius: 16px;
+        box-shadow: 0 0 20px 8px #d0d0d0;
+        overflow: hidden;
+    }
+
+    /*Image*/
+    .card-image {
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        transition: all 1s cubic-bezier(0.645, 0.045, 0.355, 1);
+    }
+
+    /*Description */
+    .card-description {
+        display: flex;
+        position: absolute;
+        gap: 0.5em;
+        flex-direction: column;
+        /* background-color: #f5f5f5; */
+        color: #212121;
+        height: 70%;
+        bottom: -90%; /* Initially hidden */
+        transition: all 1s cubic-bezier(0.645, 0.045, 0.355, 1);
+        padding: 1rem;
+        background: rgba(211, 213, 218, 0.5);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        backdrop-filter: blur(0px);
+        -webkit-backdrop-filter: blur(0px);
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        width: 100%;
+    }
+
+    /* Hover states */
+    .card:hover .card-description {
+        bottom: 0; /* Move up to be visible */
+    }
+
+    .shadow {
+        box-shadow: inset 0 -3em 3em rgba(0, 0, 0, 0.1), 0 0 0 2px rgb(190, 190, 190), 0.3em 0.3em 1em rgba(0, 0, 0, 0.3);
+    }
+</style>
+
+

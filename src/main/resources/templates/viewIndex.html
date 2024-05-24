@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script src="https://cdn.tailwindcss.com/3.3.0"></script>
+    <title>Alura_Challenge_Literatura</title>
+</head>
+<body>
+<!--Navbar-->
+<nav class="bg-gray-900 border-gray-200 d">
+    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+        <a href="/cargar?page=1" class="flex items-center space-x-3 rtl:space-x-reverse">
+            <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#ffffff"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="mr-2 h-6 w-6"
+            >
+                <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path>
+            </svg>
+            <span class="self-center text-2xl font-semibold whitespace-nowrap text-white">Biblioteca</span>
+        </a>
+        <button
+                data-collapse-toggle="navbar-default"
+                type="button"
+                class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-gray-200"
+                aria-controls="navbar-default"
+                aria-expanded="false"
+        >
+            <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15" />
+            </svg>
+        </button>
+        <div class="hidden w-full md:block md:w-auto" id="navbar-default">
+            <ul
+                    class="bg-gray-900 font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-gray-900"
+            >
+                <li>
+                    <a
+                            href="/myLibros"
+                            class="block py-2 px-3 text-white rounded hover:bg-blue-900 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0"
+                            aria-current="page"
+                    >Libros</a
+                    >
+                </li>
+                <li>
+                    <a
+                            href="/api/autores"
+                            class="block py-2 px-3 text-white rounded hover:bg-blue-900 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0"
+                    >Autores</a
+                    >
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!--FinNavbar-->
+
+<!-- Header -->
+<div class="w-full py-8 bg-edit">
+    <div class="container mx-auto px-4 md:px-6">
+        <div class="flex flex-col items-center justify-between gap-6 md:flex-row">
+            <div class="max-w-2xl flex-1">
+                <h1 class="text-5xl font-extrabold tracking-tight text-blue-900">Encuentra tu próxima lectura</h1>
+                <p class="mt-4 text-lg font-bold text-blue-900">
+                    Busca entre miles de libros de literatura y descubre nuevos autores y géneros.
+                </p>
+                <form id="searchForm" class="mt-6 flex items-center">
+                    <input
+                            id="bookTitleInput"
+                            class="flex h-10 w-full flex-1 rounded-md rounded-l-md border-0 bg-white px-4 py-2 text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 border-input ring-offset-background disabled:opacity-50"
+                            type="search"
+                            placeholder="Buscar libros..."
+                    />
+                    <button
+                            class="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md rounded-r-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors ring-offset-background hover:bg-indigo-500 disabled:opacity-50"
+                            type="submit"
+                    >
+                        Buscar
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--FinHeader-->
+<!-- Body -->
+<div class="container mx-auto px-4 py-12 md:px-6">
+    <div class="grid gap-8 ">
+
+        <div>
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold">Resultados de búsqueda</h2>
+                <p class="resultCount mt-2 text-gray-600"></p>
+            </div>
+            <!-- Card -->
+            <div class="containerResult grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+                <div th:each="libro, iterStat : ${libros}" class="bg-white rounded-lg shadow-sm overflow-hidden" >
+                    <div class="block card-block relative flex flex-col h-64 overflow-hidden text-gray-700 transition-opacity bg-white shadow-md cursor-pointer w-96 rounded-xl bg-clip-border hover:opacity-90"
+                         th:attr="data-dialog-target='book-dialog-' + ${iterStat.index}">
+                        <img th:if="${libro.formatos().urlImagen() != null}"
+                             th:src="@{${libro.formatos().urlImagen()}}" alt="Book cover" width="300" height="400"
+                             class="w-full"/>
+                        <img th:unless="${libro.formatos().urlImagen() != null}"
+                             th:src="@{https://ctppxztfz8.execute-api.us-west-2.amazonaws.com/v1/photo-server/products/empty-img.jpg}"
+                             alt="Default book cover" width="300" height="400" class="w-full"/>
+                    </div>
+
+                    <div class="p-4 pointer-events-none fixed inset-0 z-[999] grid h-screen w-screen place-items-center bg-black bg-opacity-60 opacity-0 backdrop-blur-sm transition-opacity duration-300"
+                         th:attr="data-dialog-backdrop='book-dialog-' + ${iterStat.index}" data-dialog-backdrop-close="true">
+                        <div class="relative m-4 max-w-[75%] rounded-lg bg-white font-sans text-base font-light leading-relaxed text-blue-gray-500 antialiased shadow-2xl"
+                             role="dialog" th:attr="data-dialog='book-dialog-' + ${iterStat.index}, data-id=${libro.idLibro()}">
+                            <div class="m-2 bg-white rounded-lg shadow-sm overflow-hidden grid md:grid-cols-2 gap-6 lg:gap-12 items-start max-w-6xl px-4 mx-auto py-6 ">
+                                <div class="block card-block grid gap-4 md:gap-8">
+                                    <img id="urlImg" th:if="${libro.formatos().urlImagen() != null}"
+                                         th:src="@{${libro.formatos().urlImagen()}}" alt="Book cover" width="300"
+                                         height="400" class="w-full"/>
+                                    <img  th:unless="${libro.formatos().urlImagen() != null}"
+                                          th:src="@{https://ctppxztfz8.execute-api.us-west-2.amazonaws.com/v1/photo-server/products/empty-img.jpg}"
+                                          alt="Default book cover" width="300" height="400" class="w-full"/>
+                                </div>
+                                <div class="p-4 m-auto">
+                                    <h3 class="font-semibold text-blue-900">Titulo: <span id="titulo" th:text="${libro.titulo()}" class="text-lg font-semibold text-gray-900"></span></h3>
+                                    <p class="font-semibold text-blue-900">Autores: <span id="autor" th:each="autor : ${libro.autores()}" th:text="${autor.getNombre()+' '+autor.getApellido()}" class="mt-2 text-gray-600"></span></p>
+                                    <p class="font-semibold text-blue-900">Lenguajes: <span id="idioma"  th:text="${libro.getIdiomasComoString()}" class="mt-2 text-gray-600"></span></p>
+                                    <p class="font-semibold text-blue-900">Descargas: <span id="descarga" th:text="${libro.numeroDeDescargas()}" class="mt-2 text-gray-600"></span></p>
+                                </div>
+                                <button th:onclick="|saveBookDB('${libro.idLibro}')|" data-th-attr="data-book-id=${libro.idLibro()}" class=" bg-blue-100 items-center justify-center whitespace-nowrap rounded-md font-bold text-blue-400 ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full md:w-auto">
+                                    Guardar en BD
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Pagination-->
+    </div>
+    <div class="mt-8 flex justify-center">
+        <nav aria-label="pagination" class="mx-auto flex w-full justify-center" role="navigation">
+            <ul class="flex flex-row items-center gap-1">
+                <li th:if="${prevUrl != null}" class="">
+                    <a th:href="@{${prevUrl}}"
+                       class="inline-flex h-10 items-center justify-center gap-1 whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium transition-colors ring-offset-background pl-2.5 hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+                       aria-label="Go to previous page">
+                        <span>Previous</span>
+                    </a>
+                </li>
+
+                <li th:classappend="${currentPage == 1} ? 'active' : ''">
+                    <a th:href="@{/api/libros(page=1)}"
+                       class="inline-flex h-10 w-10 items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors ring-offset-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+                       th:text="1"></a>
+                </li>
+
+                <li th:unless="${currentPage == 1 || currentPage == totalPages}"
+                    th:classappend="${currentPage == totalPages} ? 'active' : ''">
+                    <a th:href="@{/api/libros(page=${currentPage})}"
+                       class="inline-flex h-10 w-10 items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors ring-offset-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+                       th:text="${currentPage}"></a>
+                </li>
+
+                <li th:if="${nextUrl != null}" class="">
+                    <a th:href="@{${nextUrl}}"
+                       class="inline-flex h-10 items-center justify-center gap-1 whitespace-nowrap rounded-md px-4 py-2 text-sm font-medium transition-colors ring-offset-background pr-2.5 hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+                       aria-label="Go to next page">
+                        <span>Next</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/busqueda.js"></script>
+<script src="/guardarLibro.js"></script>
+</html>
+
+
+<style>
+    .bg-edit {
+        background-image: linear-gradient(to right, rgba(248, 245, 245, 0.5), rgba(12, 12, 12, 0.932)),
+        url('https://cache.mrporter.com/content/images/cms/ycm/resource/blob/10275542/2edb11ece0a9d8977c0427cd05685d3c/books-opener-jpg-data.jpg/w400_q80.jpg');
+        background-repeat: repeat;
+    }
+
+</style>
+
+
+<style>
+    .card-block {
+        display: block;
+        width: 300px;
+        /* Ancho inicial del contenedor */
+        height: 400px;
+        /* Altura inicial del contenedor */
+        overflow: hidden;
+        /* Oculta el desbordamiento para que la imagen no sobresalga */
+        /* transition: width 0.3s ease, height 0.3s ease; Transición suave de tamaño */
+        transition: width 0.5s ease, height 0.5s ease;
+        /* Transición más lenta de transformación */
+        background: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        backdrop-filter: blur(3.5px);
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    .card-block img {
+        width: 100%;
+        /* Ancho del 100% del contenedor padre */
+        height: 100%;
+        /* Altura del 100% del contenedor padre */
+        object-fit: fill;
+        /* Ajuste de objeto para cubrir */
+        transition: transform 0.5s ease;
+        /* Transición suave de transformación */
+    }
+
+    .card-block:hover img {
+        transform: scale(0.9);
+        border: 1px solid black;
+        border-radius: 5px;
+    }
+
+    .card-block:active {
+        transform: scale(0.9) rotateZ(1.7deg);
+        box-shadow: 0 8px 32px 0 rgba(232, 232, 235, 0.897);
+    }
+</style>
+
+
