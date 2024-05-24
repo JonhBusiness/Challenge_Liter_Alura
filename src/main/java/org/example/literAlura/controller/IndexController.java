@@ -37,12 +37,12 @@ public class IndexController {
         ConvierteDatosImpl conversor = new ConvierteDatosImpl();
         ResultResponse libros = conversor.obtenerDatos(respuesta, ResultResponse.class);
 
-        int totalPages = (int) Math.ceil((double) libros.count() / 32);
+       // int totalPages = (int) Math.ceil((double) libros.count() / 32);
         String nextUrl = libros.next() != null ? "/cargar?page=" + (pagina + 1) : null;
         String prevUrl = libros.previous() != null ? "/cargar?page=" + (pagina - 1) : null;
 
         model.addAttribute("libros", libros.results());
-        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("totalPages", 10);
         model.addAttribute("currentPage", pagina);
         model.addAttribute("nextUrl", nextUrl);
         model.addAttribute("prevUrl", prevUrl);
